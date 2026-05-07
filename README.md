@@ -107,6 +107,8 @@ toast.success('Synced', {
 
 Supported positions are `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, and `bottom-right`.
 
+For Expo apps that want to drive native haptics directly with `expo-haptics`, see [Expo Haptics guide](./docs/expo-haptics.md).
+
 ## Custom rendering
 
 Use `toast.custom` for a completely custom toast node:

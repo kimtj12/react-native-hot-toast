@@ -107,6 +107,8 @@ toast.success('Synced', {
 
 지원하는 위치는 `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, `bottom-right`입니다.
 
+Expo 앱에서 `expo-haptics`로 네이티브 햅틱을 직접 제어하려면 [Expo Haptics 사용 가이드](./docs/expo-haptics.md)를 참고하세요.
+
 ## 커스텀 렌더링
 
 완전히 직접 만든 토스트 노드가 필요하면 `toast.custom`을 사용하세요.
