@@ -88,13 +88,13 @@ toast.success('Synced', {
     secondary: '#ffffff',
   },
   hapticFeedback: true,
-  swipeToDismiss: true,
+  swipeToDismiss: false,
 });
 
 <Toaster
   position="top-center"
   gutter={10}
-  swipeToDismiss
+  swipeToDismiss={false}
   toastOptions={{
     style: { backgroundColor: '#111827' },
     textStyle: { color: '#ffffff' },
@@ -106,6 +106,8 @@ toast.success('Synced', {
 ```
 
 Supported positions are `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, and `bottom-right`.
+
+Swipe-up dismissal is enabled by default. Set `swipeToDismiss={false}` on `<Toaster />`, or `swipeToDismiss: false` on a single toast, to turn it off.
 
 For Expo apps that want to drive native haptics directly with `expo-haptics`, see [Expo Haptics guide](./docs/expo-haptics.md).
 
@@ -156,7 +158,7 @@ This library follows the original API where it makes sense for React Native, but
 - `style` uses React Native's `StyleProp<ViewStyle>`.
 - `textStyle` and `iconStyle` are available for native styling.
 - Hover-based pause is replaced by `pauseOnPressIn`, which is enabled by default.
-- `swipeToDismiss` is available for mobile gestures and is opt-in by default.
+- `swipeToDismiss` is enabled by default for mobile gestures and can be turned off.
 - `useSafeArea` is enabled by default on `<Toaster />`.
 - `hapticFeedback` can be enabled per toast.
 

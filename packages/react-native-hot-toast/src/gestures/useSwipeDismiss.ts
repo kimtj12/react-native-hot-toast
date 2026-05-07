@@ -3,7 +3,6 @@ import { Dimensions } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useSharedValue,
-  useAnimatedStyle,
   withTiming,
   runOnJS,
   Easing,
@@ -16,8 +15,8 @@ const SPRING_BACK_DURATION = 200;
 const FLY_OUT_DURATION = 220;
 
 export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
-  const translateY = useSharedValue(0);
-  const opacity = useSharedValue(1);
+  const swipeTranslateY = useSharedValue(0);
+  const swipeOpacity = useSharedValue(1);
   const screenHeight = Dimensions.get('window').height;
 
   const dismiss = React.useCallback(() => {
@@ -31,9 +30,12 @@ export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
       .activeOffsetY(-10)
       .failOffsetX([-12, 12])
       .onUpdate((event) => {
-        translateY.value = Math.min(event.translationY, 0);
+        swipeTranslateY.value = Math.min(event.translationY, 0);
         const distance = Math.max(-event.translationY, 0);
-        opacity.value = Math.max(0.2, 1 - distance / (screenHeight * 0.35));
+        swipeOpacity.value = Math.max(
+          0.2,
+          1 - distance / (screenHeight * 0.35)
+        );
       })
       .onEnd((event) => {
         const distance = Math.max(-event.translationY, 0);
@@ -43,11 +45,11 @@ export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
           velocity > SWIPE_VELOCITY_THRESHOLD;
 
         if (shouldDismiss) {
-          translateY.value = withTiming(-screenHeight, {
+          swipeTranslateY.value = withTiming(-screenHeight, {
             duration: FLY_OUT_DURATION,
             easing: Easing.out(Easing.cubic),
           });
-          opacity.value = withTiming(
+          swipeOpacity.value = withTiming(
             0,
             { duration: FLY_OUT_DURATION, easing: Easing.out(Easing.cubic) },
             (finished) => {
@@ -55,22 +57,17 @@ export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
             }
           );
         } else {
-          translateY.value = withTiming(0, {
+          swipeTranslateY.value = withTiming(0, {
             duration: SPRING_BACK_DURATION,
             easing: Easing.out(Easing.cubic),
           });
-          opacity.value = withTiming(1, {
+          swipeOpacity.value = withTiming(1, {
             duration: SPRING_BACK_DURATION,
             easing: Easing.out(Easing.cubic),
           });
         }
       });
-  }, [enabled, dismiss, screenHeight, translateY, opacity]);
+  }, [enabled, dismiss, screenHeight, swipeTranslateY, swipeOpacity]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-    opacity: opacity.value,
-  }));
-
-  return { gesture, animatedStyle };
+  return { gesture, translateY: swipeTranslateY, opacity: swipeOpacity };
 };

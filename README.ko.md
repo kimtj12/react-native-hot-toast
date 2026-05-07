@@ -88,13 +88,13 @@ toast.success('Synced', {
     secondary: '#ffffff',
   },
   hapticFeedback: true,
-  swipeToDismiss: true,
+  swipeToDismiss: false,
 });
 
 <Toaster
   position="top-center"
   gutter={10}
-  swipeToDismiss
+  swipeToDismiss={false}
   toastOptions={{
     style: { backgroundColor: '#111827' },
     textStyle: { color: '#ffffff' },
@@ -106,6 +106,8 @@ toast.success('Synced', {
 ```
 
 지원하는 위치는 `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, `bottom-right`입니다.
+
+위로 스와이프 dismiss는 기본값으로 켜져 있습니다. 끄려면 `<Toaster />`에 `swipeToDismiss={false}`를 넘기거나, 개별 토스트에 `swipeToDismiss: false`를 지정하세요.
 
 Expo 앱에서 `expo-haptics`로 네이티브 햅틱을 직접 제어하려면 [Expo Haptics 사용 가이드](./docs/expo-haptics.md)를 참고하세요.
 
@@ -156,7 +158,7 @@ import {
 - `style`은 React Native의 `StyleProp<ViewStyle>`을 사용합니다.
 - 네이티브 스타일링을 위해 `textStyle`과 `iconStyle`을 제공합니다.
 - hover 기반 pause 대신 `pauseOnPressIn`을 사용하며 기본값은 켜짐입니다.
-- 모바일 제스처용 `swipeToDismiss`를 제공하며 기본값은 꺼짐입니다.
+- 모바일 제스처용 `swipeToDismiss`는 기본값이 켜짐이며 필요하면 끌 수 있습니다.
 - `<Toaster />`의 `useSafeArea`는 기본값이 켜짐입니다.
 - 개별 토스트에서 `hapticFeedback`을 켤 수 있습니다.
 

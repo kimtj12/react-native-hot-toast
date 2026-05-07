@@ -100,7 +100,7 @@ This is a port aimed at native mobile, so a few things differ:
 - `style` is `StyleProp<ViewStyle>`; new `textStyle` and `iconStyle` props for fine control
 - `className` is removed (no DOM)
 - Desktop hover-based pause is replaced with `pauseOnPressIn` (on by default)
-- New `swipeToDismiss` prop (opt-in)
+- New `swipeToDismiss` prop (on by default, can be disabled)
 - New `useSafeArea` prop (on by default)
 
 ## License

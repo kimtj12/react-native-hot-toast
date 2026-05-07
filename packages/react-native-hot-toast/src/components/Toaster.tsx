@@ -115,7 +115,7 @@ export const Toaster: React.FC<ToasterProps> = ({
   containerStyle,
   useSafeArea = true,
   pauseOnPressIn = true,
-  swipeToDismiss = false,
+  swipeToDismiss = true,
 }) => {
   const { toasts, handlers } = useToaster(toastOptions, toasterId);
   const insets = useSafeAreaInsets();

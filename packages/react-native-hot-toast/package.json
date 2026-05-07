@@ -1,6 +1,6 @@
 {
   "name": "@kimtj12/react-native-hot-toast",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Smoking hot React Native notifications. Faithful port of react-hot-toast with polished animations powered by Reanimated v4.",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",

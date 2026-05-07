@@ -32,6 +32,8 @@ import {
   positionFactor,
 } from './animations';
 
+const UNMEASURED_TRANSLATE_Y = 1000;
+
 interface ToastBarProps {
   toast: Toast;
   position?: ToastPosition;
@@ -52,7 +54,7 @@ export const ToastBar: React.FC<ToastBarProps> = React.memo(
     style,
     onStartPause,
     onEndPause,
-    swipeToDismiss = false,
+    swipeToDismiss = true,
     children,
   }) => {
     const factor = positionFactor(toast.position || position || 'top-center');
@@ -60,10 +62,11 @@ export const ToastBar: React.FC<ToastBarProps> = React.memo(
     const reduced = prefersReducedMotion();
     const swipe = useSwipeDismiss(toast.id, swipeToDismiss && toast.visible);
 
-    // Initial values mirror keyframe 0% — toast-bar.tsx:8-10
-    const translateY = useSharedValue(0);
+    const translateY = useSharedValue(
+      reduced ? 0 : factor * -UNMEASURED_TRANSLATE_Y
+    );
     const scale = useSharedValue(reduced ? 1 : 0.6);
-    const opacity = useSharedValue(reduced ? 0 : 0.5);
+    const opacity = useSharedValue(0);
 
     React.useEffect(() => {
       // Wait for height measurement before starting enter animation.
@@ -72,6 +75,8 @@ export const ToastBar: React.FC<ToastBarProps> = React.memo(
 
       if (toast.visible) {
         if (reduced) {
+          translateY.value = 0;
+          scale.value = 1;
           opacity.value = withTiming(1, {
             duration: REDUCED_MOTION_DURATION,
             easing: Easing.linear,
@@ -122,9 +127,9 @@ export const ToastBar: React.FC<ToastBarProps> = React.memo(
     }, [factor, height, toast.visible, reduced, translateY, scale, opacity]);
 
     const animatedStyle = useAnimatedStyle(() => ({
-      opacity: height === 0 ? 0 : opacity.value,
+      opacity: (height === 0 ? 0 : opacity.value) * swipe.opacity.value,
       transform: [
-        { translateY: translateY.value },
+        { translateY: translateY.value + swipe.translateY.value },
         { scale: scale.value },
       ],
     }));
@@ -166,7 +171,7 @@ export const ToastBar: React.FC<ToastBarProps> = React.memo(
             style,
             toast.style,
             animatedStyle,
-            swipe.animatedStyle,
+            height === 0 && styles.measuring,
           ]}
         >
           {renderedChildren}
@@ -200,6 +205,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
+  },
+  measuring: {
+    opacity: 0,
   },
   message: {
     flexShrink: 1,
