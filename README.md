@@ -1,41 +1,50 @@
 # react-native-hot-toast
 
-React Native 포트 of [`react-hot-toast`](https://react-hot-toast.com). 원본의 폴리시드한
-진입/퇴장 애니메이션, 체크마크/에러 아이콘 그리기, 스택 오프셋 트랜지션을 그대로
-복제했고 모바일 네이티브 UX(누르면 일시정지, 스와이프 dismiss)을 추가했습니다.
+[Korean README](./README.ko.md)
 
-## 모노레포 구조
+A React Native toast library inspired by [`react-hot-toast`](https://react-hot-toast.com). It keeps the familiar `toast.success`, `toast.error`, `toast.loading`, and `toast.promise` API while adapting the experience for native iOS and Android apps with Reanimated animations, safe-area handling, press-to-pause behavior, swipe dismissal, and optional haptic feedback.
 
-```
-react-native-hot-toast/
-├── packages/react-native-hot-toast/   라이브러리
-├── apps/example/                      Expo 데모 앱
-└── react-hot-toast/                   원본 참조 (수정 안 함)
-```
+## Package
 
-## 시작하기
+The published package is:
 
 ```bash
-pnpm install
-pnpm --filter example start
+npm install @kimtj12/react-native-hot-toast
 ```
 
-iOS 시뮬레이터/실기기에서 데모 화면이 뜨고, 각 버튼으로 토스트 동작을 확인할 수 있습니다.
-
-## 라이브러리 빌드
+You can also install it with pnpm or yarn:
 
 ```bash
-pnpm --filter react-native-hot-toast build
+pnpm add @kimtj12/react-native-hot-toast
+yarn add @kimtj12/react-native-hot-toast
 ```
 
-산출물은 `packages/react-native-hot-toast/lib/`에 CJS, ESM, `.d.ts`로 출력됩니다.
+## Peer dependencies
 
-## 사용법
+Install these in your app if they are not already present:
+
+| Package | Minimum version |
+| --- | --- |
+| `react` | `>=18` |
+| `react-native` | `>=0.76` |
+| `react-native-reanimated` | `>=3.16` |
+| `react-native-safe-area-context` | `>=4.10` |
+| `react-native-gesture-handler` | `>=2.20` |
+
+For Expo apps, use Expo's installer so the native dependencies match your SDK:
+
+```bash
+npx expo install react-native-reanimated react-native-safe-area-context react-native-gesture-handler
+```
+
+## Quick start
+
+Mount one `<Toaster />` near the root of your app. `GestureHandlerRootView` is required for gesture support, and `SafeAreaProvider` lets the toaster avoid notches and home indicators.
 
 ```tsx
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { toast, Toaster } from 'react-native-hot-toast';
+import { toast, Toaster } from '@kimtj12/react-native-hot-toast';
 
 export default function App() {
   return (
@@ -47,11 +56,18 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+```
 
-// Anywhere in your app
+Trigger toasts from anywhere after the toaster is mounted:
+
+```tsx
+toast('Event created');
 toast.success('Saved!');
 toast.error('Something broke');
-toast.loading('Uploading...');
+
+const loadingId = toast.loading('Uploading...');
+toast.dismiss(loadingId);
+
 toast.promise(api.save(), {
   loading: 'Saving...',
   success: 'Saved!',
@@ -59,24 +75,130 @@ toast.promise(api.save(), {
 });
 ```
 
-## Peer dependencies
+## Common options
 
-| 패키지 | 버전 |
-|---|---|
-| react | ≥18 |
-| react-native | ≥0.76 |
-| react-native-reanimated | ≥3.16 (v4 호환) |
-| react-native-safe-area-context | ≥4.10 |
-| react-native-gesture-handler | ≥2.20 |
+Options can be passed to a single toast or through `toastOptions` on `<Toaster />`.
 
-## 원본과의 차이
+```tsx
+toast.success('Synced', {
+  duration: 5000,
+  position: 'bottom-center',
+  iconTheme: {
+    primary: '#111827',
+    secondary: '#ffffff',
+  },
+  hapticFeedback: true,
+  swipeToDismiss: true,
+});
 
-- `style` 은 `StyleProp<ViewStyle>`, 새 prop으로 `textStyle`, `iconStyle` 추가
-- `className` 은 삭제
-- 데스크톱 hover 기반 pause 대신 `pauseOnPressIn` (기본 켜짐)
-- `swipeToDismiss` 신규 (opt-in)
-- `useSafeArea` 신규 (기본 켜짐)
+<Toaster
+  position="top-center"
+  gutter={10}
+  swipeToDismiss
+  toastOptions={{
+    style: { backgroundColor: '#111827' },
+    textStyle: { color: '#ffffff' },
+    success: {
+      iconTheme: { primary: '#16a34a', secondary: '#ffffff' },
+    },
+  }}
+/>;
+```
 
-## 라이선스
+Supported positions are `top-left`, `top-center`, `top-right`, `bottom-left`, `bottom-center`, and `bottom-right`.
 
-MIT
+## Custom rendering
+
+Use `toast.custom` for a completely custom toast node:
+
+```tsx
+toast.custom((t) => (
+  <Pressable onPress={() => toast.dismiss(t.id)}>
+    <Text>Custom toast</Text>
+  </Pressable>
+));
+```
+
+Or pass a render function to `<Toaster />` if you want to keep the store and stacking behavior but replace the default bar UI:
+
+```tsx
+<Toaster>
+  {(t) => (
+    <ToastBar toast={t}>
+      {({ icon, message }) => (
+        <>
+          {icon}
+          <View style={{ marginLeft: 8 }}>{message}</View>
+        </>
+      )}
+    </ToastBar>
+  )}
+</Toaster>
+```
+
+For fully headless integrations, import from the headless entrypoint:
+
+```tsx
+import {
+  toast,
+  useToaster,
+  useToasterStore,
+} from '@kimtj12/react-native-hot-toast/headless';
+```
+
+## Differences from react-hot-toast
+
+This library follows the original API where it makes sense for React Native, but a few details are intentionally different:
+
+- `className` is not supported because there is no DOM.
+- `style` uses React Native's `StyleProp<ViewStyle>`.
+- `textStyle` and `iconStyle` are available for native styling.
+- Hover-based pause is replaced by `pauseOnPressIn`, which is enabled by default.
+- `swipeToDismiss` is available for mobile gestures and is opt-in by default.
+- `useSafeArea` is enabled by default on `<Toaster />`.
+- `hapticFeedback` can be enabled per toast.
+
+## Monorepo development
+
+This repository contains the library package and an Expo example app:
+
+```text
+react-native-hot-toast/
+|-- packages/react-native-hot-toast/   Library package
+|-- apps/example/                      Expo demo app
+`-- react-hot-toast/                   Upstream reference copy
+```
+
+Install dependencies:
+
+```bash
+pnpm install
+```
+
+Run the example app:
+
+```bash
+pnpm example
+```
+
+Build the library:
+
+```bash
+pnpm build
+```
+
+Run type checks:
+
+```bash
+pnpm typecheck
+```
+
+Build output is written to `packages/react-native-hot-toast/lib/`.
+
+## License
+
+MIT. See [packages/react-native-hot-toast/LICENSE](./packages/react-native-hot-toast/LICENSE).
+
+## Acknowledgements
+
+This project is a respectful React Native port of [`react-hot-toast`](https://github.com/timolins/react-hot-toast) by Timo Lins and its contributors. The API design, animation feel, and developer experience are based on the original web library.
