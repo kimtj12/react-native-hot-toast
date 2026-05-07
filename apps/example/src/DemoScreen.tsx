@@ -71,6 +71,15 @@ export const DemoScreen: React.FC = () => {
       <Section title="기본">
         <Button label="Default" onPress={() => toast('Event created')} />
         <Button
+          label="Dark mode"
+          onPress={() =>
+            toast('Dark mode toast', {
+              style: styles.darkToast,
+              textStyle: styles.darkToastText,
+            })
+          }
+        />
+        <Button
           label="Long message"
           onPress={() =>
             toast(
@@ -209,6 +218,13 @@ const styles = StyleSheet.create({
   },
   btnPressed: { backgroundColor: '#333' },
   btnText: { color: '#fff', fontSize: 13, fontWeight: '600' },
+  darkToast: {
+    borderRadius: 30,
+    backgroundColor: '#333',
+  },
+  darkToastText: {
+    color: '#fff',
+  },
   footer: {
     marginTop: 32,
     fontSize: 12,
