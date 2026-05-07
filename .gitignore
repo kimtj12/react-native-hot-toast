@@ -1,0 +1,17 @@
+node_modules/
+.expo/
+.expo-shared/
+dist/
+lib/
+*.log
+.DS_Store
+.env
+.env.local
+ios/Pods/
+android/.gradle/
+android/build/
+android/app/build/
+.metro-cache/
+
+# Cloned reference repo
+react-hot-toast/

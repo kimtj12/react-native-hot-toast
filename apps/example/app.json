@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "react-native-hot-toast example",
+    "slug": "react-native-hot-toast-example",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kimskulltj.rnhottoastexample"
+    },
+    "android": {
+      "package": "com.kimskulltj.rnhottoastexample"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": []
+  }
+}

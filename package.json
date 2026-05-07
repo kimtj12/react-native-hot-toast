@@ -1,0 +1,13 @@
+{
+  "name": "react-native-hot-toast-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "pnpm --filter react-native-hot-toast build",
+    "typecheck": "pnpm -r typecheck",
+    "example": "pnpm --filter example start"
+  }
+}
