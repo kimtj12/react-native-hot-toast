@@ -163,7 +163,7 @@ export const DemoScreen: React.FC = () => {
         <Button
           label="Swipe to dismiss"
           onPress={() =>
-            toast('좌/우로 스와이프하여 dismiss', {
+            toast('위로 스와이프하여 dismiss', {
               swipeToDismiss: true,
               duration: 8000,
             })
@@ -181,7 +181,7 @@ export const DemoScreen: React.FC = () => {
 
       <Text style={styles.footer}>
         토스트를 누르고 있는 동안 자동 dismiss 타이머가 멈춥니다. swipeToDismiss
-        토스트는 좌/우 스와이프로 즉시 닫을 수 있고, hapticFeedback 옵션은
+        토스트는 위 스와이프로 즉시 닫을 수 있고, hapticFeedback 옵션은
         토스트 표시 시 기기 피드백을 발생시킵니다. 위치 버튼 6개로 스택 동작을
         확인할 수 있습니다.
       </Text>

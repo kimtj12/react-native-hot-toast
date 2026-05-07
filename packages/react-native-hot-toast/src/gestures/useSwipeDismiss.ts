@@ -16,9 +16,9 @@ const SPRING_BACK_DURATION = 200;
 const FLY_OUT_DURATION = 220;
 
 export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
-  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
-  const screenWidth = Dimensions.get('window').width;
+  const screenHeight = Dimensions.get('window').height;
 
   const dismiss = React.useCallback(() => {
     toast.dismiss(toastId);
@@ -28,23 +28,22 @@ export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
     if (!enabled) return undefined;
 
     return Gesture.Pan()
-      .activeOffsetX([-10, 10])
-      .failOffsetY([-12, 12])
+      .activeOffsetY(-10)
+      .failOffsetX([-12, 12])
       .onUpdate((event) => {
-        translateX.value = event.translationX;
-        const distance = Math.abs(event.translationX);
-        opacity.value = Math.max(0.2, 1 - distance / (screenWidth * 0.6));
+        translateY.value = Math.min(event.translationY, 0);
+        const distance = Math.max(-event.translationY, 0);
+        opacity.value = Math.max(0.2, 1 - distance / (screenHeight * 0.35));
       })
       .onEnd((event) => {
-        const distance = Math.abs(event.translationX);
-        const velocity = Math.abs(event.velocityX);
+        const distance = Math.max(-event.translationY, 0);
+        const velocity = Math.max(-event.velocityY, 0);
         const shouldDismiss =
           distance > SWIPE_DISTANCE_THRESHOLD ||
           velocity > SWIPE_VELOCITY_THRESHOLD;
 
         if (shouldDismiss) {
-          const direction = event.translationX > 0 ? 1 : -1;
-          translateX.value = withTiming(direction * screenWidth, {
+          translateY.value = withTiming(-screenHeight, {
             duration: FLY_OUT_DURATION,
             easing: Easing.out(Easing.cubic),
           });
@@ -56,7 +55,7 @@ export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
             }
           );
         } else {
-          translateX.value = withTiming(0, {
+          translateY.value = withTiming(0, {
             duration: SPRING_BACK_DURATION,
             easing: Easing.out(Easing.cubic),
           });
@@ -66,10 +65,10 @@ export const useSwipeDismiss = (toastId: string, enabled: boolean) => {
           });
         }
       });
-  }, [enabled, dismiss, screenWidth, translateX, opacity]);
+  }, [enabled, dismiss, screenHeight, translateY, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
+    transform: [{ translateY: translateY.value }],
     opacity: opacity.value,
   }));
 
