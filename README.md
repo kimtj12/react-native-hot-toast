@@ -111,6 +111,8 @@ Swipe-up dismissal is enabled by default. Set `swipeToDismiss={false}` on `<Toas
 
 For Expo apps that want to drive native haptics directly with `expo-haptics`, see [Expo Haptics guide](./docs/expo-haptics.md).
 
+If you are using an AI coding assistant (Claude, Cursor, Copilot, etc.), point it at the [AI usage guide](./docs/ai-usage-guide.md) — a structured reference covering setup, API, options, common patterns, and pitfalls AI agents tend to hit.
+
 ## Custom rendering
 
 Use `toast.custom` for a completely custom toast node:

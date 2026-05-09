@@ -111,6 +111,8 @@ toast.success('Synced', {
 
 Expo 앱에서 `expo-haptics`로 네이티브 햅틱을 직접 제어하려면 [Expo Haptics 사용 가이드](./docs/expo-haptics.md)를 참고하세요.
 
+AI 코딩 어시스턴트(Claude, Cursor, Copilot 등)와 함께 사용한다면 [AI 사용 가이드](./docs/ai-usage-guide.md)를 참조하도록 알려주세요. 셋업, API, 옵션, 자주 쓰는 패턴, AI가 자주 틀리는 함정을 구조화해 정리했습니다.
+
 ## 커스텀 렌더링
 
 완전히 직접 만든 토스트 노드가 필요하면 `toast.custom`을 사용하세요.
